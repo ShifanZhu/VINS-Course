@@ -47,6 +47,7 @@ System::~System()
     ofs_pose.close();
 }
 
+// Read image & Extract features & Track features and store into corresponding param
 void System::PubImageData(double dStampSec, Mat &img)
 {
     if (!init_feature)
@@ -92,6 +93,7 @@ void System::PubImageData(double dStampSec, Mat &img)
 
     TicToc t_r;
     // cout << "3 PubImageData t : " << dStampSec << endl;
+    // Extract features & Track features & Undistort features
     trackerData[0].readImage(img, dStampSec);
 
     for (unsigned int i = 0;; i++)
@@ -110,8 +112,8 @@ void System::PubImageData(double dStampSec, Mat &img)
         vector<set<int>> hash_ids(NUM_OF_CAM);
         for (int i = 0; i < NUM_OF_CAM; i++)
         {
-            auto &un_pts = trackerData[i].cur_un_pts;
-            auto &cur_pts = trackerData[i].cur_pts;
+            auto &un_pts = trackerData[i].cur_un_pts; // Undistorted normalized coordinate
+            auto &cur_pts = trackerData[i].cur_pts; // feature in current frame
             auto &ids = trackerData[i].ids;
             auto &pts_velocity = trackerData[i].pts_velocity;
             for (unsigned int j = 0; j < ids.size(); j++)
